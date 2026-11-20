@@ -9,7 +9,7 @@ struct LintableCommandPlugin: CommandPlugin {
         let targets = names.isEmpty ? context.package.targets : try context.package.targets(named: names)
         let files = targets
             .compactMap { $0 as? SourceModuleTarget }
-            .flatMap { $0.sourceFiles(withSuffix: "swift").map(\.url) }
+            .flatMap { $0.sourceFiles.map(\.url).filter { ["swift", "xcstrings"].contains($0.pathExtension) } }
         try LintRun.perform(
             tool: context.tool(named: "lintable-cli").url,
             files: files,
@@ -29,7 +29,7 @@ struct LintableCommandPlugin: CommandPlugin {
             let names = extractor.extractOption(named: "target")
             let files = context.xcodeProject.targets
                 .filter { names.isEmpty || names.contains($0.displayName) }
-                .flatMap { $0.inputFiles.filter { $0.url.pathExtension == "swift" }.map(\.url) }
+                .flatMap { $0.inputFiles.map(\.url).filter { ["swift", "xcstrings"].contains($0.pathExtension) } }
             try LintRun.perform(
                 tool: context.tool(named: "lintable-cli").url,
                 files: files,

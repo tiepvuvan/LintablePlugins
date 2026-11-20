@@ -11,7 +11,7 @@ issues and pull requests there.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/tiepvuvan/LintablePlugins", from: "0.1.0"),
+    .package(url: "https://github.com/tiepvuvan/LintablePlugins", from: "0.2.0"),
 ],
 targets: [
     .target(
@@ -31,6 +31,11 @@ Add `https://github.com/tiepvuvan/LintablePlugins` as a package dependency, then
 The plugin looks for the nearest `.lintable.yml`, from the target's folder up to the
 package or project root, and does nothing without one. Run `lintable init` to create
 it, then list the rules you want under `rules:`.
+
+It checks the target's Swift files and String Catalogs (`.xcstrings`). It also adds
+`LintableReleaseGate.swift` to the target, which is empty unless the config's
+`release_condition` and a rule's `release_severity` say a violation should stop
+release builds.
 
 ## Command plugin
 

@@ -8,7 +8,7 @@ let package = Package(
         .plugin(name: "LintableCommandPlugin", targets: ["LintableCommandPlugin"]),
     ],
     targets: [
-        .binaryTarget(name: "LintableBinary", url: "https://github.com/tiepvuvan/Lintable/releases/download/v0.1.0/lintable.artifactbundle.zip", checksum: "59f3729df4f050928ec4fbe8a9a58c48e2b3c2d3f1f49127c69365a0cf7776e8"),
+        .binaryTarget(name: "LintableBinary", url: "https://github.com/tiepvuvan/Lintable/releases/download/v0.2.0/lintable.artifactbundle.zip", checksum: "ee51269e4903f8d35bd6e2f14bda0d49a4e0b0cfb49fd7114f318c0114f6dc88"),
         .plugin(
             name: "LintableBuildToolPlugin",
             capability: .buildTool(),
@@ -16,7 +16,7 @@ let package = Package(
         ),
         .plugin(
             name: "LintableCommandPlugin",
-            capability: .command(intent: .custom(verb: "lintable", description: "Check Swift files with Lintable.")),
+            capability: .command(intent: .custom(verb: "lintable", description: "Check Swift files and String Catalogs with Lintable.")),
             dependencies: ["LintableBinary"]
         ),
     ]

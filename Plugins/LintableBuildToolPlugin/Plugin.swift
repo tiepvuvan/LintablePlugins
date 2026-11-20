@@ -9,7 +9,7 @@ struct LintableBuildToolPlugin: BuildToolPlugin {
             tool: context.tool(named: "lintable-cli").url,
             target: LintTarget(
                 name: target.name,
-                files: target.sourceFiles(withSuffix: "swift").map(\.url),
+                files: target.sourceFiles.map(\.url).filter(LintCommands.isLinted),
                 searchFrom: target.directoryURL,
                 root: context.package.directoryURL
             ),
@@ -27,7 +27,7 @@ struct LintableBuildToolPlugin: BuildToolPlugin {
                 tool: context.tool(named: "lintable-cli").url,
                 target: LintTarget(
                     name: target.displayName,
-                    files: target.inputFiles.filter { $0.url.pathExtension == "swift" }.map(\.url),
+                    files: target.inputFiles.map(\.url).filter(LintCommands.isLinted),
                     searchFrom: context.xcodeProject.directoryURL,
                     root: context.xcodeProject.directoryURL
                 ),
@@ -45,12 +45,17 @@ struct LintTarget {
 }
 
 enum LintCommands {
+    static func isLinted(_ file: URL) -> Bool {
+        ["swift", "xcstrings"].contains(file.pathExtension)
+    }
+
     static func make(tool: URL, target: LintTarget, workDirectory: URL) throws -> [Command] {
         guard !target.files.isEmpty, let configuration = nearestConfiguration(from: target.searchFrom, root: target.root) else {
             return []
         }
         try FileManager.default.createDirectory(at: workDirectory, withIntermediateDirectories: true)
         let fileList = workDirectory.appendingPathComponent("files.txt")
+        let output = workDirectory.appendingPathComponent("Output")
         try Data(target.files.map(\.path).sorted().joined(separator: "\n").utf8).write(to: fileList)
         return [
             .prebuildCommand(
@@ -62,8 +67,9 @@ enum LintCommands {
                     "--reporter", "xcode",
                     "--files-from", fileList.path,
                     "--cache-path", workDirectory.appendingPathComponent("Cache").path,
+                    "--release-gate", output.appendingPathComponent("LintableReleaseGate.swift").path,
                 ],
-                outputFilesDirectory: workDirectory.appendingPathComponent("Output")
+                outputFilesDirectory: output
             ),
         ]
     }
