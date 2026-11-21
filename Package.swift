@@ -8,7 +8,7 @@ let package = Package(
         .plugin(name: "LintableCommandPlugin", targets: ["LintableCommandPlugin"]),
     ],
     targets: [
-        .binaryTarget(name: "LintableBinary", url: "https://github.com/tiepvuvan/Lintable/releases/download/v0.3.0/lintable.artifactbundle.zip", checksum: "392354c3fce22bdbd4fdb9304c6a758444f55da90bd0b91799b0292948f7fac6"),
+        .binaryTarget(name: "LintableBinary", url: "https://github.com/tiepvuvan/Lintable/releases/download/v0.4.0/lintable.artifactbundle.zip", checksum: "95169efb8b3daa59d7a42bf5c1b73c3e5a2f1c7c7085970753c6c195407c471e"),
         .plugin(
             name: "LintableBuildToolPlugin",
             capability: .buildTool(),
